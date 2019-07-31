@@ -1,0 +1,43 @@
+---
+title: "June & July 2019 Heatwave in France"
+author: "Edouard"
+date: "31/07/2019"
+output: html_document
+---
+## Introduction
+
+In June and July 2019, France recorded some of its highest temperature ever as the mercury reached 42.6°C in Paris and 46°C in the Herault department. Let's plot some of those fresh records in a map.  
+Code is left apparent on purpose.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+```
+
+## Loading data
+
+```{r loading_data}
+
+tempIcon <- makeIcon(
+  iconUrl = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/320/apple/33/thermometer_1f321.png", 
+  iconWidth = 31*215/230, iconHeight = 31, 
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+city = c("Montpellier", "Carpentras", "Paris", "Lille","Gallargues","Bordeaux", "Clermont-Ferrand","Tours","Strasbourg","Vérargues","Brive")
+tempHigh = c(45,44.3,42.6,41.5,45.8, 42.6,40.9,40.8,38.9,46,42.1)
+city_tempHigh = paste(city,", ",tempHigh,"°C", sep="")
+
+tempMap <- data.frame(lat = c(43.6109200,44.0500000,48.8534100,50.6329700,43.721683,44.8404400,45.7796600,47.3833300,48.5839200,43.716,45.159555),
+                    lng = c(3.8772300,5.0500000,2.3488000,3.0585800,4.173218,-0.5805000,3.0862800,0.6833300,7.7455300,4.1,1.533937))
+```
+
+## Drawing the map
+
+```{r pressure, echo=TRUE}
+tempMap %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon = tempIcon, popup = city_tempHigh, clusterOptions = markerClusterOptions())
+```
+
